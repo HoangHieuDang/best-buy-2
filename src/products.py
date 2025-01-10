@@ -1,7 +1,10 @@
+from promotions import Promotion
+
 class Product:
     """
     class Product to handle all information of a product
     """
+
     def __init__(self, name, price, quantity):
         """
         Initialize a Product object
@@ -9,7 +12,9 @@ class Product:
         :param price:
         :param quantity:
         bool active = True (default)
+        additional instance variable for promotion object: _promotion
         """
+        _promotion = None #instance variable of class Promotion
         if quantity:
             if is_int_type_check(quantity):
                 if quantity > 0:
@@ -33,6 +38,18 @@ class Product:
         else:
             raise Exception("empty name, please enter a valid string")
         self._active = True
+
+    # A getter and setter for the promotion instance variable using
+    @property
+    def promotion(self):
+        return self._promotion
+    @promotion.setter
+    def set_promotion(self, promotion):
+        if isinstance(promotion, Promotion):
+            self._promotion = promotion
+        else:
+            raise Exception("the input parameter is not an object of Class Promotion")
+
 
     def get_quantity(self):
         """
@@ -71,7 +88,11 @@ class Product:
         """
         return the information of the product
         """
-        return f"{self._name}, Price: {self._price}, Quantity: {self._quantity}"
+        if self._promotion:
+            return f"{self._name}, Price: {self._price}, Quantity: {self._quantity}, Promotion: {self._promotion}"
+        else:
+            return f"{self._name}, Price: {self._price}, Quantity: {self._quantity}"
+
 
     def buy(self, quantity):
         """
@@ -88,6 +109,7 @@ class Product:
             else:
                 raise Exception(f"not enough {self._name} in the warehouse")
 
+
 def is_int_type_check(num):
     """
     check whether a variable has the type of integer
@@ -96,6 +118,7 @@ def is_int_type_check(num):
         return True
     else:
         raise Exception("please only enter an integer!")
+
 
 def is_int_or_float_type_check(num):
     """
@@ -106,6 +129,7 @@ def is_int_or_float_type_check(num):
     else:
         raise Exception("please only enter an integer or a float!")
 
+
 def is_str_type_check(input_str):
     """
     check whether a variable has the type of string
@@ -114,5 +138,3 @@ def is_str_type_check(input_str):
         return True
     else:
         raise Exception("please only enter a string!")
-
-
