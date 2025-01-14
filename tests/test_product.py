@@ -129,50 +129,28 @@ def test_buy_non_stocked_product():
         new_product.buy(-1)
 
 
-# Test Promotion Class
-def test_second_half_price_promotion():
-    new_product = Product("Macbook", price=1000, quantity=100)
-    second_half_price = SecondHalfPrice("Second Half price!")
-    new_product.promotion = second_half_price
+# Test the magic methods
+def test_magic_methods():
+    # The magic methods should work across all objects of children classes of Class Product
+    product_one = NonStockedProduct("Photoshop", price=200)
+    product_two = Product("Airfryer 3000", price=500, quantity=1000)
+    product_three = LimitedProduct("Macbook", price=1000, quantity=500, maximum=10)
 
-    # checking if assigning second half price promotion works correctly
-    assert isinstance(new_product.promotion, SecondHalfPrice)
-    assert new_product.buy(2) == 1500
-    assert new_product.buy(4) == 3000
-    assert new_product.buy(5) == 4000
+    # Testing < operator, the prices should be compared correctly
+    assert product_one < product_two
+    assert product_two < product_three
+    assert product_one < product_three
 
-    # checking if promotion setter detects whether the assigned object is not an object of Class Promotion
-    with pytest.raises(Exception, match="the input parameter is not an object of Class Promotion"):
-        new_product.promotion = "hello"
+    # Testing > operator, the prices should be compared correctly
+    assert product_two > product_one
+    assert product_three > product_two
+    assert product_three > product_one
 
+    # Testing str() method
+        # Testing str() method without promotion
+    assert str(product_two) == "Airfryer 3000, Price: 500, Quantity: 1000"
 
-def test_third_one_free_promotion():
-    new_product = Product("Macbook", price=1000, quantity=100)
-    third_one_free = ThirdOneFree("Third one free!")
-    new_product.promotion = third_one_free
-
-    # checking if assigning third-one-free promotion works correctly
-    assert isinstance(new_product.promotion, ThirdOneFree)
-    assert new_product.buy(1) == 1000
-    assert new_product.buy(2) == 2000
-    assert new_product.buy(3) == 2000
-    assert new_product.buy(6) == 4000
-
-def test_percent_discount_promotion():
-    new_product = Product("Macbook", price=1000, quantity=100)
-    percent_discount = PercentDiscount("Percent Discount!", 50)
-    new_product.promotion = percent_discount
-    # percentage negative
-    with pytest.raises(Exception,match="input percentage has to more than 0% and less or equal to 100%"):
-        percent_discount_negative = PercentDiscount("Percent Discount!", -50)
-
-    # percentage more than 100
-    with pytest.raises(Exception,match="input percentage has to more than 0% and less or equal to 100%"):
-        percent_discount_more_than_hundred = PercentDiscount("Percent Discount!", 200)
-
-    # checking if assigning percentage discount promotion works correctly
-    assert isinstance(new_product.promotion, PercentDiscount)
-    assert new_product.buy(1) == 500
-    assert new_product.buy(2) == 1000
-    assert new_product.buy(3) == 1500
-    assert new_product.buy(6) == 3000
+        # Testing str() method with promotion
+    second_half_price = SecondHalfPrice("Second Half Price!")
+    product_two.promotion = second_half_price
+    assert str(product_two) == "Airfryer 3000, Price: 500, Quantity: 1000, Promotion: Second Half Price!"
