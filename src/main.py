@@ -1,6 +1,8 @@
 import products
 import store
 import sys
+import promotions
+from src.promotions import SecondHalfPrice
 
 ui_display = """
             ---------------Store Menu---------------
@@ -22,10 +24,10 @@ def start(input_store):
         handles the product listing feature from the menu dispatcher
         """
         print("------list all products-------")
-        products_list = input_store.get_all_products()
+        products_list = input_store.products
         index_num = 1
         for product in products_list:
-            print(f"{index_num}. {product.show()}")
+            print(f"{index_num}. {product}")
             index_num += 1
         print("------------------------------")
 
@@ -34,7 +36,7 @@ def start(input_store):
           handles the feature to display the total amount of items in the store
         """
         print("-----Total Amount of Items----")
-        print(f"Total of {input_store.get_total_quantity()} items in input_store")
+        print(f"Total of {input_store.quantity} items in input_store")
         print("------------------------------")
 
     def order_handler():
@@ -46,7 +48,7 @@ def start(input_store):
         print("When you want to finish order, enter empty text.")
         list_all_products_handler()
         # Create a dummy_products_list to show the user what the shop list looks like after ordering
-        products_list = input_store.get_all_products()
+        products_list = input_store.products
         order_list = []
         while True:
             try:
@@ -70,7 +72,7 @@ def start(input_store):
                     raise Exception("The chosen index number doesn't exist on the list")
                 # Check if the input amount is smaller or equal the existed amount in the warehouse
                 # if smaller or equal, add the order into the list in form of a tuple with 2 elements: product_name and amount_input
-                if amount_input <= products_list[product_index - 1].get_quantity():
+                if amount_input <= products_list[product_index - 1].quantity:
                     # if the order_list is not empty, check whether an order of the same product already exists
                     # in the order_list, if the product exists, just add the new order amount to the existing amount of that product to
                     # prevent more tuples of the same product order
@@ -123,26 +125,16 @@ def start(input_store):
 
 
 # setup initial stock of inventory
-"""
-product_list = [products.Product("MacBook Air M2", price=1450, quantity=100),
-                products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                products.Product("Google Pixel 7", price=500, quantity=250)
-                ]
-best_buy = store.Store(product_list)
-
-# Main program starts here
-
-if __name__ == "__main__":
-    while True:
-        start(best_buy)
-"""
-
 if __name__ == "__main__":
     # setup initial stock of inventory
-    product_list = [products.Product("MacBook Air M2", price=1450, quantity=100),
-                    products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                    products.Product("Google Pixel 7", price=500, quantity=250),
-                    products.NonStockedProduct("Windows License", price=125),
-                    products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
-                    ]
-    best_buy = store.Store(product_list)
+    mac = products.Product("MacBook Air M2", price=1450, quantity=100)
+    bose = products.Product("Bose QuietComfort Earbuds", price=250, quantity=500)
+    pixel = products.LimitedProduct("Google Pixel 7", price=500, quantity=250, maximum=1)
+
+    best_buy = store.Store([mac, bose])
+    # mac.price = -100         # Should give error
+    print(mac)  # Should print `MacBook Air M2, Price: $1450 Quantity:100`
+    print(mac > bose)  # Should print True
+    print(mac in best_buy)  # Should print True
+    print(pixel in best_buy)  # Should print False
+
