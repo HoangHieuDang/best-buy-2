@@ -1,4 +1,6 @@
-from src.promotions import Promotion
+from src.promotions import Promotion, SecondHalfPrice, PercentDiscount, ThirdOneFree
+
+
 class Product:
     """
     class Product to handle all information of a product
@@ -13,7 +15,7 @@ class Product:
         bool active = True (default)
         additional instance variable for promotion object: _promotion
         """
-        _promotion = None  # instance variable of class Promotion
+        self._promotion = None  # instance variable of class Promotion
         if quantity:
             if is_int_type_check(quantity):
                 if quantity > 0:
@@ -41,32 +43,53 @@ class Product:
     # A getter and setter for the promotion instance variable using
     @property
     def promotion(self):
+        """
+        Return _promotion value
+        """
         return self._promotion
 
     @promotion.setter
-    def set_promotion(self, promotion):
-        if isinstance(promotion, Promotion):
+    def promotion(self, promotion):
+        """
+        set _promotion value with an Object of the children class of abstract class Promotion
+        """
+        if isinstance(promotion, Promotion) and promotion is not None:
             self._promotion = promotion
         else:
             raise Exception("the input parameter is not an object of Class Promotion")
 
-    def get_price(self):
+    @property
+    def price(self):
+        """
+        return price of the product
+        """
         return self._price
 
-    def get_quantity(self):
+    @price.setter
+    def price(self, price):
+        if is_int_or_float_type_check(price):
+            if price >= 0:
+                self._price = price
+            else:
+                raise Exception("price can't take a negative value")
+
+    @property
+    def quantity(self):
         """
         returns the quantity of the product
         """
         return self._quantity
 
-    def set_quantity(self, quantity):
+    @quantity.setter
+    def quantity(self, quantity):
         """
         set the quantity of the product
         """
         if is_int_type_check(quantity):
             self._quantity = quantity
 
-    def is_active(self):
+    @property
+    def active(self):
         """
         return either True or False for whether a product is active or not
         """
@@ -86,7 +109,7 @@ class Product:
         """
         self._active = False
 
-    def show(self):
+    def __str__(self):
         """
         return the information of the product
         """
@@ -95,12 +118,31 @@ class Product:
         else:
             return f"{self._name}, Price: {self._price}, Quantity: {self._quantity}"
 
+    def __lt__(self, other_product):
+        """
+        Magic method for (<) comparison operator
+        for comparing the price of the Product objects
+        """
+        if isinstance(other_product, Product):
+            return self._price < other_product._price
+        else:
+            raise Exception("Not an object of Product")
+
+    def __gt__(self, other_product):
+        """
+        Magic method for (>) comparison operator
+        for comparing the price of the Product objects
+        """
+        if isinstance(other_product, Product):
+            return self._price > other_product._price
+        else:
+            raise Exception("Not an object of Product")
+
     def buy(self, quantity):
         """
         reduce the total quantity of the product by the quantity passed as argument
         """
         if self._active:
-
             if is_int_type_check(quantity):
                 if 0 < quantity <= self._quantity:
                     self._quantity -= quantity
@@ -130,30 +172,37 @@ class NonStockedProduct(Product):
         super().__init__(name, price, quantity)
         # since it is a NonStockedProduct, the _quantity will always be set to 0
 
-    def get_quantity(self):
+    @property
+    def quantity(self):
         """
         returns the quantity of the product
         """
         return 0
 
-    def set_quantity(self, quantity):
+    @quantity.setter
+    def quantity(self, quantity):
         """
         set the quantity of the product
         """
         raise Exception("Can't set quantity for this non stocked product")
 
-    def show(self):
+    def __str__(self):
         """
         return the information of the product
         """
         return f"{self._name}, Price: {self._price}, non stocked product"
 
-    def buy(self):
+    def buy(self, quantity):
         """
-        since it is a non stocked product, the product can not be ordered more than once
+        since it is a non-stocked product, the product can not be ordered more than once
         """
-        if self._active:
-            return self._price
+        if quantity < 0:
+            raise Exception("please give a quantity larger than 0!")
+        elif quantity > 1:
+            raise Exception("Non Stocked Product only accepts quantity of 1")
+        else:
+            if self._active:
+                return self._price
 
 
 # __________________________________________________________________________________________

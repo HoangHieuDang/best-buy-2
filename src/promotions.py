@@ -1,9 +1,13 @@
 from abc import ABC, abstractmethod
 
+
 class Promotion(ABC):
 
     def __init__(self, name):
         self._name = name
+
+    def __str__(self):
+        return self._name
 
     @abstractmethod
     def apply_promotion(self, product, quantity):
@@ -12,6 +16,7 @@ class Promotion(ABC):
         quantity: the amount of purchased items for that product
         """
         pass
+
 
 class SecondHalfPrice(Promotion):
     def __init__(self, name):
@@ -26,9 +31,12 @@ class SecondHalfPrice(Promotion):
             pairs = quantity // 2
             # Calculate the remaining single item (if any)
             remaining_items = quantity % 2
-            return (pairs * product.get_price() * 1.5) + (remaining_items * product.get_price())
+            print(f"--------quantity = {quantity}----------")
+            print(f"pairs = {pairs}")
+            print(f"remaining = {remaining_items}")
+            return (pairs * product.price * 1.5) + (remaining_items * product.price)
         else:
-            return quantity * product.get_price()
+            return quantity * product.price
 
 
 class ThirdOneFree(Promotion):
@@ -44,9 +52,9 @@ class ThirdOneFree(Promotion):
             triple = quantity // 3
             # Calculate the remaining single item (if any)
             remaining_items = quantity % 3
-            return (triple * product.get_price() * 2) + (remaining_items * product.get_price())
+            return (triple * product.price * 2) + (remaining_items * product.price)
         else:
-            return quantity * product.get_price()
+            return quantity * product.price
 
 
 class PercentDiscount(Promotion):
@@ -62,4 +70,4 @@ class PercentDiscount(Promotion):
         """
         PercentageDiscount
         """
-        return product.get_price() * (100 - self._percent) / 100 * quantity
+        return product.price * (100 - self._percent) / 100 * quantity

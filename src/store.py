@@ -29,23 +29,25 @@ class Store:
         if product in self._products_list:
             self._products_list.remove(product)
 
-    def get_total_quantity(self):
+    @property
+    def quantity(self):
         """
         get the total quantity of all products in the store
         return a sum of all product's quantities
         """
         total_quantity = 0
         for product in self._products_list:
-            total_quantity += product.get_quantity()
+            total_quantity += product.quantity
         return total_quantity
 
-    def get_all_products(self):
+    @property
+    def products(self):
         """
         return a list of all products in the store
         """
         active_products_list = []
         for product in self._products_list:
-            if product.is_active():
+            if product.active:
                 active_products_list.append(product)
         return active_products_list
 
@@ -68,6 +70,21 @@ class Store:
             return order_price
         else:
             raise Exception("empty shopping list")
+
+    def __contains__(self, product):
+        """
+        magic method for (in) operator to check whether a product is in the store
+        """
+        return product in self._products_list
+
+    def __add__(self, store):
+        """
+        using (+) operator to create a new store out of 2 other store objects.
+        The products of both stores will be added together and create a new list for the new store
+        Assuming that the products of the 2 stores are not identical since the assignment doesn't mention
+        the condition
+        """
+        return Store(self._products_list + store._products_list)
 
 
 def is_product_type_check(product):
