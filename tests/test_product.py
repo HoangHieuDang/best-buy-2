@@ -99,6 +99,9 @@ def test_buy_invalid_quantity():
 # Testing other product classes
 # Testing LimitedProduct Class
 def test_buy_limited_product():
+    """
+    Testing class LimitedProduct inherited from class Product
+    """
     new_product = LimitedProduct("Macbook", price=100, quantity=100, maximum=10)
 
     # Normal case
@@ -115,6 +118,9 @@ def test_buy_limited_product():
 
 # Testing NonStockedProduct Class
 def test_buy_non_stocked_product():
+    """
+    Testing class NonStockedProduct inherited from class Product
+    """
     new_product = NonStockedProduct("Photoshop", price=1000)
 
     # Normal case
@@ -131,6 +137,9 @@ def test_buy_non_stocked_product():
 
 # Test the magic methods
 def test_magic_methods():
+    """
+    Testing magic methods implemented for class Product
+    """
     # The magic methods should work across all objects of children classes of Class Product
     product_one = NonStockedProduct("Photoshop", price=200)
     product_two = Product("Airfryer 3000", price=500, quantity=1000)

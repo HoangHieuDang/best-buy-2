@@ -3,6 +3,9 @@ from src.products import Product
 from src.promotions import Promotion, SecondHalfPrice, ThirdOneFree, PercentDiscount
 # Test Promotion Class
 def test_second_half_price_promotion():
+    """
+    Testing SecondHalfPrice class inherited from class Promotion
+    """
     new_product = Product("Macbook", price=1000, quantity=100)
     second_half_price = SecondHalfPrice("Second Half price!")
     new_product.promotion = second_half_price
@@ -19,6 +22,9 @@ def test_second_half_price_promotion():
 
 
 def test_third_one_free_promotion():
+    """
+    Testing ThirdOneFree class inherited from class Promotion
+    """
     new_product = Product("Macbook", price=1000, quantity=100)
     third_one_free = ThirdOneFree("Third one free!")
     new_product.promotion = third_one_free
@@ -31,6 +37,9 @@ def test_third_one_free_promotion():
     assert new_product.buy(6) == 4000
 
 def test_percent_discount_promotion():
+    """
+    Testing PercentDiscount class inherited from class Promotion
+    """
     new_product = Product("Macbook", price=1000, quantity=100)
     percent_discount = PercentDiscount("Percent Discount!", 50)
     new_product.promotion = percent_discount
