@@ -1,5 +1,4 @@
-from promotions import Promotion
-
+from src.promotions import Promotion
 class Product:
     """
     class Product to handle all information of a product
@@ -14,7 +13,7 @@ class Product:
         bool active = True (default)
         additional instance variable for promotion object: _promotion
         """
-        _promotion = None #instance variable of class Promotion
+        _promotion = None  # instance variable of class Promotion
         if quantity:
             if is_int_type_check(quantity):
                 if quantity > 0:
@@ -43,6 +42,7 @@ class Product:
     @property
     def promotion(self):
         return self._promotion
+
     @promotion.setter
     def set_promotion(self, promotion):
         if isinstance(promotion, Promotion):
@@ -50,6 +50,8 @@ class Product:
         else:
             raise Exception("the input parameter is not an object of Class Promotion")
 
+    def get_price(self):
+        return self._price
 
     def get_quantity(self):
         """
@@ -93,22 +95,26 @@ class Product:
         else:
             return f"{self._name}, Price: {self._price}, Quantity: {self._quantity}"
 
-
     def buy(self, quantity):
         """
         reduce the total quantity of the product by the quantity passed as argument
         """
         if self._active:
+
             if is_int_type_check(quantity):
                 if 0 < quantity <= self._quantity:
                     self._quantity -= quantity
                     if self._quantity == 0:
                         self.deactivate()
-                    return quantity * self._price
+                    if not self._promotion:
+                        return quantity * self._price
+                    else:
+                        return self._promotion.apply_promotion(self, quantity)
                 elif quantity < 0:
                     raise Exception("please give a quantity larger than 0!")
                 else:
                     raise Exception(f"not enough {self._name} in the warehouse")
+
         else:
             raise Exception("Product is not active")
 
@@ -123,7 +129,6 @@ class NonStockedProduct(Product):
         quantity = 1
         super().__init__(name, price, quantity)
         # since it is a NonStockedProduct, the _quantity will always be set to 0
-        self._quantity = 0
 
     def get_quantity(self):
         """
@@ -162,19 +167,24 @@ class LimitedProduct(Product):
         reduce the total quantity of the product by the quantity passed as argument
         """
         if self._active:
+
             if is_int_type_check(quantity):
                 if 0 < quantity <= self._quantity:
                     if quantity <= self._maximum:
                         self._quantity -= quantity
                         if self._quantity == 0:
                             self.deactivate()
-                        return quantity * self._price
+                        if not self._promotion:
+                            return quantity * self._price
+                        else:
+                            return self._promotion.apply_promotion(self, quantity)
                     else:
                         raise Exception(f"please order a quantity less than {self._maximum}")
                 elif quantity < 0:
                     raise Exception("please give a quantity larger than 0!")
                 else:
                     raise Exception(f"not enough {self._name} in the warehouse")
+
         else:
             raise Exception("Product is not active")
 
