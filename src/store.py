@@ -1,5 +1,4 @@
-from products import *
-
+from src.products import Product, is_int_type_check
 
 class Store:
     """
