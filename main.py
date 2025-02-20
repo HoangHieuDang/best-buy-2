@@ -1,8 +1,7 @@
-import products
-import store
+from src import products
+from src import store
 import sys
-import promotions
-from src.promotions import SecondHalfPrice
+
 
 ui_display = """
             ---------------Store Menu---------------
