@@ -17,7 +17,6 @@ class Promotion(ABC):
         """
         pass
 
-
 class SecondHalfPrice(Promotion):
     def __init__(self, name):
         super().__init__(name)
@@ -31,13 +30,9 @@ class SecondHalfPrice(Promotion):
             pairs = quantity // 2
             # Calculate the remaining single item (if any)
             remaining_items = quantity % 2
-            print(f"--------quantity = {quantity}----------")
-            print(f"pairs = {pairs}")
-            print(f"remaining = {remaining_items}")
             return (pairs * product.price * 1.5) + (remaining_items * product.price)
         else:
             return quantity * product.price
-
 
 class ThirdOneFree(Promotion):
     def __init__(self, name):
@@ -55,7 +50,6 @@ class ThirdOneFree(Promotion):
             return (triple * product.price * 2) + (remaining_items * product.price)
         else:
             return quantity * product.price
-
 
 class PercentDiscount(Promotion):
     def __init__(self, name, percent):
